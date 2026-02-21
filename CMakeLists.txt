@@ -36,11 +36,14 @@ target_link_libraries(${PROJECT_NAME}
   SceGxm_stub
   SceCommonDialog_stub
   SceSysmodule_stub
+  SceAppMgr_stub
   SceAppUtil_stub
   SceShaccCg_stub
+  SceSharedFb_stub
   SceKernelDmacMgr_stub
   SceIofilemgr_stub
   SceLibKernel_stub
+  ScePgf_stub
   m
   c
 )
