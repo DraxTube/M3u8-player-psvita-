@@ -16,10 +16,10 @@
 #define HEADER_H      48
 #define FOOTER_H      36
 #define PANEL_X       20
-#define PANEL_Y       (HEADER_H + 8)
+#define PANEL_Y       (HEADER_H + 16)
 #define PANEL_W       (SCREEN_W - 40)
-#define PANEL_H       (SCREEN_H - HEADER_H - FOOTER_H - 16)
-#define ROW_H         30
+#define PANEL_H       (SCREEN_H - HEADER_H - FOOTER_H - 24)
+#define ROW_H         36
 #define PLAYLIST_ROWS ((PANEL_H - 8) / ROW_H)
 
 /* -----------------------------------------------------------------------
@@ -143,12 +143,14 @@ static void render_playing(void) {
     /* Video occupa tutto lo schermo, overlay UI sopra */
     player_render_frame(NULL);
 
-    /* Overlay semi-trasparente in basso */
-    ui_draw_rect(0, SCREEN_H - 90, SCREEN_W, 90, RGBA8(0, 0, 0, 180));
+    /* Overlay semi-trasparente in basso, sopra il footer */
+    int overlay_h = 100;
+    int overlay_y = SCREEN_H - FOOTER_H - overlay_h;
+    ui_draw_rect(0, overlay_y, SCREEN_W, overlay_h, RGBA8(0, 0, 0, 180));
 
     /* Titolo traccia */
     M3U8Entry *e = &g_playlist.entries[g_pl_sel];
-    ui_draw_text(16, SCREEN_H - 84, UI_COLOR_TEXT, e->title);
+    ui_draw_text(16, overlay_y + 10, UI_COLOR_TEXT, e->title);
 
     /* Progresso */
     PlayerStatus st = player_get_status();
@@ -156,7 +158,7 @@ static void render_playing(void) {
                  ? (float)st.position_ms / (float)st.duration_ms
                  : 0.0f;
 
-    ui_draw_progress(16, SCREEN_H - 56, SCREEN_W - 32, 6,
+    ui_draw_progress(16, overlay_y + 45, SCREEN_W - 32, 6,
                      prog, UI_COLOR_BAR_BG, UI_COLOR_BAR_FG);
 
     char pos_str[16], dur_str[16];
@@ -165,16 +167,16 @@ static void render_playing(void) {
 
     char time_str[48];
     snprintf(time_str, sizeof(time_str), "%s / %s", pos_str, dur_str);
-    ui_draw_text(16, SCREEN_H - 44, UI_COLOR_TEXT_DIM, time_str);
+    ui_draw_text(16, overlay_y + 65, UI_COLOR_TEXT_DIM, time_str);
 
     /* Stato */
     const char *state_label = (st.state == PLAYER_PAUSED) ? "||  PAUSA" : ">  PLAY";
-    ui_draw_text(SCREEN_W - 120, SCREEN_H - 44, UI_COLOR_ACCENT, state_label);
+    ui_draw_text(SCREEN_W - 120, overlay_y + 65, UI_COLOR_ACCENT, state_label);
 
     /* Traccia N/M */
     char track_info[32];
     snprintf(track_info, sizeof(track_info), "%d / %d", g_pl_sel + 1, g_playlist.count);
-    ui_draw_text(16, SCREEN_H - 22, UI_COLOR_TEXT_DIM, track_info);
+    ui_draw_text(16, overlay_y + 85, UI_COLOR_TEXT_DIM, track_info);
 
     draw_footer("[CROCE] Pausa  [QUADRATO] Stop  [L] Precedente  [R] Prossima");
 }
