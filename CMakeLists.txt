@@ -12,7 +12,7 @@ project(m3u8player C)
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 set(VITA_APP_NAME "M3U8 Player")
-set(VITA_TITLEID  "M3U800001")
+set(VITA_TITLEID  "MPVT00001")
 set(VITA_VERSION  "01.00")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2")
