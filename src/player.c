@@ -1,7 +1,7 @@
 #include "player.h"
 #include "ui.h"
 #include <psp2/avplayer.h>
-#include <psp2/audio.h>
+#include <psp2/audioout.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/kernel/sysmem.h>
@@ -81,30 +81,17 @@ static int audio_thread(SceSize args, void *argp) {
 
         if (sceAvPlayerGetAudioData(g_player, &frame)) {
             if (g_audio_port < 0) {
-                /* SceAudio API: sceAudioOpen(port, format, grain, sampleRate, stereo, unk) */
-                int stereo = (frame.details.audio.channelCount != 1);
-                g_audio_port = sceAudioOpen(
-                    PSP2_AUDIO_OUT_PORT_TYPE_MAIN,
-                    PSP2_AUDIO_FORMAT_S16_MONO + stereo,
+                g_audio_port = sceAudioOutOpenPort(
+                    SCE_AUDIO_OUT_PORT_TYPE_MAIN,
                     1024,
                     frame.details.audio.sampleRate,
-                    stereo,
-                    NULL
+                    (frame.details.audio.channelCount == 1)
+                        ? SCE_AUDIO_OUT_MODE_MONO
+                        : SCE_AUDIO_OUT_MODE_STEREO
                 );
-                if (g_audio_port < 0) {
-                    /* fallback: prova a riaprire la porta di default */
-                    g_audio_port = sceAudioOpen(
-                        PSP2_AUDIO_OUT_PORT_TYPE_MAIN,
-                        PSP2_AUDIO_FORMAT_S16_STEREO,
-                        1024,
-                        48000,
-                        1,
-                        NULL
-                    );
-                }
             }
             if (g_audio_port >= 0) {
-                sceAudioOutput2(g_audio_port, SCE_AUDIO_VOLUME_0DB, frame.pData);
+                sceAudioOutOutput(g_audio_port, frame.pData);
             }
         } else {
             sceKernelDelayThread(1000);
@@ -112,7 +99,7 @@ static int audio_thread(SceSize args, void *argp) {
     }
 
     if (g_audio_port >= 0) {
-        sceAudioClose(g_audio_port);
+        sceAudioOutReleasePort(g_audio_port);
         g_audio_port = -1;
     }
     return 0;
