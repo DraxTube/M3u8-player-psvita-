@@ -24,7 +24,7 @@ static void  *g_cdram_base = NULL;
 /* -----------------------------------------------------------------------
    SceAvPlayer
    ----------------------------------------------------------------------- */
-static SceAvPlayerHandle g_player  = NULL;
+static SceAvPlayerHandle g_player  = 0;
 static int               g_audio_port = -1;
 static SceUID            g_audio_thread = -1;
 static volatile int      g_audio_running = 0;
@@ -81,13 +81,16 @@ static int audio_thread(SceSize args, void *argp) {
 
         if (sceAvPlayerGetAudioData(g_player, &frame)) {
             if (g_audio_port < 0) {
+                /* SceAvPlayerAudio fields: channelCount, sampleRate, size, languageCode.
+                   No sampleCount field – use fixed 1024 samples (standard for SceAudioOut). */
+                int mode = (frame.details.audio.channelCount == 1)
+                           ? SCE_AUDIO_OUT_MODE_MONO
+                           : SCE_AUDIO_OUT_MODE_STEREO;
                 g_audio_port = sceAudioOutOpenPort(
                     SCE_AUDIO_OUT_PORT_TYPE_MAIN,
-                    frame.details.audio.sampleCount,
+                    1024,
                     frame.details.audio.sampleRate,
-                    (frame.details.audio.channelCount == 1)
-                        ? SCE_AUDIO_OUT_MODE_MONO
-                        : SCE_AUDIO_OUT_MODE_STEREO
+                    mode
                 );
             }
             if (g_audio_port >= 0) {
@@ -153,7 +156,7 @@ int player_play(const char *filepath) {
     int ret = sceAvPlayerAddSource(g_player, filepath);
     if (ret < 0) {
         sceAvPlayerClose(g_player);
-        g_player = NULL;
+        g_player = 0;
         return ret;
     }
 
@@ -184,7 +187,7 @@ void player_stop(void) {
     if (g_player) {
         sceAvPlayerStop(g_player);
         sceAvPlayerClose(g_player);
-        g_player = NULL;
+        g_player = 0;
     }
     if (g_video_tex) {
         vita2d_free_texture(g_video_tex);
