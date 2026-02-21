@@ -30,7 +30,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   vita2d
   SceAvPlayer_stub
-  SceAudioOut_stub
+  SceAudio_stub
   SceCtrl_stub
   SceDisplay_stub
   SceGxm_stub
