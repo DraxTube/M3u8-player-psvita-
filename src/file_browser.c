@@ -1,5 +1,6 @@
 #include "file_browser.h"
 #include <psp2/io/dirent.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
