@@ -16,6 +16,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Generate LiveArea assets
+        run: |
+          apt-get update && apt-get install -y python3-pip
+          pip3 install Pillow
+          python3 -c "
+          from PIL import Image, ImageDraw, ImageFont
+          import os
+          os.makedirs('sce_sys/livearea/contents', exist_ok=True)
+          # icon0.png 128x128
+          img = Image.new('RGBA', (128, 128), (18, 18, 40, 255))
+          d = ImageDraw.Draw(img)
+          d.polygon([(45,30),(45,98),(100,64)], fill=(0,120,215,255))
+          img.save('sce_sys/icon0.png')
+          # bg.png 840x500
+          img = Image.new('RGBA', (840, 500), (12, 12, 30, 255))
+          d = ImageDraw.Draw(img)
+          d.polygon([(370,180),(370,320),(480,250)], fill=(0,120,215,180))
+          img.save('sce_sys/livearea/contents/bg.png')
+          # startup.png 280x158
+          img = Image.new('RGBA', (280, 158), (18, 18, 40, 255))
+          d = ImageDraw.Draw(img)
+          d.polygon([(115,40),(115,118),(175,79)], fill=(0,120,215,255))
+          img.save('sce_sys/livearea/contents/startup.png')
+          print('Assets generated successfully')
+          "
+
       - name: Configure CMake
         run: |
           mkdir -p build
