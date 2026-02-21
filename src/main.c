@@ -278,7 +278,7 @@ static void handle_error_input(SceCtrlData *ctrl) {
 int main(void) {
     /* Carica moduli necessari */
     sceSysmoduleLoadModule(SCE_SYSMODULE_AVPLAYER);
-    sceSysmoduleLoadModule(SCE_SYSMODULE_AUDIO_IN);
+    /* SceAudioOut non richiede sysmodule separato */
 
     vita2d_init();
     vita2d_set_clear_color(UI_COLOR_BG);
