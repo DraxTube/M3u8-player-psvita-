@@ -42,7 +42,7 @@ jobs:
             -v "$GITHUB_WORKSPACE:/src" \
             -w /src \
             vitasdk/vitasdk:latest \
-            bash -c "mkdir -p build && cd build && cmake .. -DCMAKE_TOOLCHAIN_FILE=\$VITASDK/share/vita.toolchain.cmake && make -j\$(nproc)"
+            bash -c "ls -la sce_sys/icon0.png sce_sys/livearea/contents/ && mkdir -p build && cd build && cmake .. -DCMAKE_TOOLCHAIN_FILE=\$VITASDK/share/vita.toolchain.cmake && make -j\$(nproc) && ls -la m3u8player.vpk && echo 'VPK built successfully'"
 
       - name: Upload VPK artifact
         uses: actions/upload-artifact@v4
