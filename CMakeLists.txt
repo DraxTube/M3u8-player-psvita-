@@ -25,6 +25,7 @@ add_executable(${PROJECT_NAME}
   src/player.c
   src/file_browser.c
   src/ui.c
+  src/sharedfb_stub.c
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -39,7 +40,6 @@ target_link_libraries(${PROJECT_NAME}
   SceAppMgr_stub
   SceAppUtil_stub
   SceShaccCg_stub
-  SceSharedFb_stub
   SceKernelDmacMgr_stub
   SceIofilemgr_stub
   SceLibKernel_stub
