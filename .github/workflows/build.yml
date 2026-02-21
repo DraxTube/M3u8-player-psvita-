@@ -21,17 +21,17 @@ jobs:
           from PIL import Image, ImageDraw
           import os
           os.makedirs('sce_sys/livearea/contents', exist_ok=True)
-          img = Image.new('RGBA', (128, 128), (18, 18, 40, 255))
+          img = Image.new('RGB', (128, 128), (18, 18, 40))
           d = ImageDraw.Draw(img)
-          d.polygon([(45,30),(45,98),(100,64)], fill=(0,120,215,255))
+          d.polygon([(45,30),(45,98),(100,64)], fill=(0,120,215))
           img.save('sce_sys/icon0.png')
-          img = Image.new('RGBA', (840, 500), (12, 12, 30, 255))
+          img = Image.new('RGB', (840, 500), (12, 12, 30))
           d = ImageDraw.Draw(img)
-          d.polygon([(370,180),(370,320),(480,250)], fill=(0,120,215,180))
+          d.polygon([(370,180),(370,320),(480,250)], fill=(0,100,200))
           img.save('sce_sys/livearea/contents/bg.png')
-          img = Image.new('RGBA', (280, 158), (18, 18, 40, 255))
+          img = Image.new('RGB', (280, 158), (18, 18, 40))
           d = ImageDraw.Draw(img)
-          d.polygon([(115,40),(115,118),(175,79)], fill=(0,120,215,255))
+          d.polygon([(115,40),(115,118),(175,79)], fill=(0,120,215))
           img.save('sce_sys/livearea/contents/startup.png')
           print('Assets generated OK')
           "
